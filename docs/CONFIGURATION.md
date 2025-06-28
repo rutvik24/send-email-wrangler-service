@@ -13,10 +13,10 @@
    # Paste your API token when prompted
 
    wrangler secret put RECIPIENT_EMAIL
-   # Enter your email address (e.g., rutviknabhoya2001@gmail.com)
+   # Enter your email address (e.g., developer@example.com)
 
    wrangler secret put RECIPIENT_NAME
-   # Enter your name (e.g., Rutvik Nabhoya) - Optional
+   # Enter your name (e.g., Developer) - Optional
    ```
 
 ### Resend Configuration
