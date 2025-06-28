@@ -1,0 +1,25 @@
+{
+  "name": "portfolio-email-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for handling portfolio contact form submissions",
+  "main": "src/worker.js",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "tail": "wrangler tail",
+    "login": "wrangler login"
+  },
+  "keywords": [
+    "cloudflare",
+    "worker",
+    "email",
+    "contact-form",
+    "mailtrap",
+    "portfolio"
+  ],
+  "author": "Rutvik Nabhoya",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

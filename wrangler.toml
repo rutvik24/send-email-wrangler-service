@@ -1,0 +1,22 @@
+name = "portfolio-contact-api"
+main = "src/worker.js"
+compatibility_date = "2024-01-01"
+
+# Environment variables
+[vars]
+CLOUDFLARE_EMAIL_ENABLED = false
+
+# Secrets (use: wrangler secret put SECRET_NAME)
+# Email Service API Keys:
+# MAILTRAP_API_KEY = "your-mailtrap-api-key"
+# RESEND_API_KEY = "your-resend-api-key" 
+# SENDGRID_API_KEY = "your-sendgrid-api-key"
+
+# Email Configuration:
+# RECIPIENT_EMAIL = "your-email@example.com"
+# RECIPIENT_NAME = "Your Name" (optional)
+
+# If using Cloudflare Email Workers
+# [[email_bindings]]
+# name = "EMAIL_SENDER"
+# destination_address = "email@example.com"
