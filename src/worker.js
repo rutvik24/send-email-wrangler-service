@@ -40,39 +40,44 @@ export default {
               "Content-Type": "application/json",
               ...corsHeaders,
             },
-          }
+          },
         );
       }
 
       // Get recipient email from environment variable
-      const recipientEmail = env.RECIPIENT_EMAIL || "your-email@example.com";
+      const recipientEmail =
+        env.RECIPIENT_EMAIL || "rutviknabhoya2001@gmail.com";
       const recipientName = env.RECIPIENT_NAME || "Portfolio Owner";
+      const senderEmail = env.SENDER_EMAIL || "rutviknabhoya2001@rutvik.qzz.io";
+      const mailtrapApiKey = env.MAILTRAP_API_KEY;
 
       // Option 1: Using Mailtrap API (recommended for testing and production)
-      if (env.MAILTRAP_API_KEY) {
-        const mailtrapResponse = await fetch("https://send.api.mailtrap.io/api/send", {
-          method: "POST",
-          headers: {
-            'Authorization': `Bearer ${env.MAILTRAP_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: {
-              email: env.SENDER_EMAIL, // Use your verified domain or Mailtrap's demo domain
-              name: "Portfolio Contact Form"
+      if (mailtrapApiKey) {
+        const mailtrapResponse = await fetch(
+          "https://send.api.mailtrap.io/api/send",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${mailtrapApiKey}`,
+              "Content-Type": "application/json",
             },
-            to: [
-              {
-                email: recipientEmail,
-                name: recipientName
-              }
-            ],
-            reply_to: {
-              email: email,
-              name: name
-            },
-            subject: `Portfolio Contact - Message from ${name}`,
-            html: `
+            body: JSON.stringify({
+              from: {
+                email: senderEmail, // Use your verified domain or Mailtrap's demo domain
+                name: "Portfolio Contact Form",
+              },
+              to: [
+                {
+                  email: recipientEmail,
+                  name: recipientName,
+                },
+              ],
+              reply_to: {
+                email: email,
+                name: name,
+              },
+              subject: `Portfolio Contact - Message from ${name}`,
+              html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
                 <h2 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px;">New Contact Form Submission</h2>
                 
@@ -84,7 +89,7 @@ export default {
                 <div style="margin: 20px 0;">
                   <p><strong>Message:</strong></p>
                   <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #007bff; margin: 10px 0;">
-                    ${message.replace(/\n/g, '<br>')}
+                    ${message.replace(/\n/g, "<br>")}
                   </div>
                 </div>
                 
@@ -95,7 +100,7 @@ export default {
                 </p>
               </div>
             `,
-            text: `
+              text: `
 New Contact Form Submission
 
 Name: ${name}
@@ -107,12 +112,15 @@ ${message}
 ---
 Sent from your portfolio contact form
             `.trim(),
-          }),
-        });
+            }),
+          },
+        );
 
         if (!mailtrapResponse.ok) {
           const errorText = await mailtrapResponse.text();
-          throw new Error(`Mailtrap API error: ${mailtrapResponse.status} - ${errorText}`);
+          throw new Error(
+            `Mailtrap API error: ${mailtrapResponse.status} - ${errorText}`,
+          );
         }
       }
 
@@ -125,7 +133,7 @@ Sent from your portfolio contact form
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: env.SENDER_EMAIL, // Must be from your verified domain
+            from: senderEmail, // Must be from your verified domain
             to: [recipientEmail],
             reply_to: email,
             subject: `Portfolio Contact - Message from ${name}`,
@@ -151,7 +159,7 @@ Sent from your portfolio contact form
         // This would use Cloudflare's Email Workers feature
         // You need to set up email routing in your Cloudflare dashboard
         await env.EMAIL_SENDER.send({
-          from: env.SENDER_EMAIL,
+          from: senderEmail,
           to: recipientEmail,
           subject: `Portfolio Contact - Message from ${name}`,
           content: `
@@ -186,7 +194,7 @@ Sent from your portfolio contact form
                   subject: `Portfolio Contact - Message from ${name}`,
                 },
               ],
-              from: { email: env.SENDER_EMAIL }, // Must be verified
+              from: { email: senderEmail }, // Must be verified
               reply_to: { email: email },
               content: [
                 {
@@ -203,7 +211,7 @@ Sent from your portfolio contact form
                 },
               ],
             }),
-          }
+          },
         );
 
         if (!sendGridResponse.ok) {
@@ -224,7 +232,7 @@ Sent from your portfolio contact form
             "Content-Type": "application/json",
             ...corsHeaders,
           },
-        }
+        },
       );
     } catch (error) {
       console.error("Email sending error:", error);
@@ -240,8 +248,9 @@ Sent from your portfolio contact form
             "Content-Type": "application/json",
             ...corsHeaders,
           },
-        }
+        },
       );
     }
   },
 };
+
