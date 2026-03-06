@@ -61,6 +61,7 @@ wrangler login
    wrangler secret put MAILTRAP_API_KEY
    wrangler secret put RECIPIENT_EMAIL
    wrangler secret put RECIPIENT_NAME
+   wrangler secret put SENDER_EMAIL
    ```
 
 #### Option B: Resend
@@ -72,6 +73,7 @@ wrangler login
    wrangler secret put RESEND_API_KEY
    wrangler secret put RECIPIENT_EMAIL
    wrangler secret put RECIPIENT_NAME
+   wrangler secret put SENDER_EMAIL
    ```
 
 #### Option C: SendGrid
@@ -83,6 +85,7 @@ wrangler login
    wrangler secret put SENDGRID_API_KEY
    wrangler secret put RECIPIENT_EMAIL
    wrangler secret put RECIPIENT_NAME
+   wrangler secret put SENDER_EMAIL
    ```
 
 ### 4. Deploy
@@ -100,24 +103,27 @@ Update your frontend contact form to send POST requests to your worker URL:
 
 ```javascript
 const handleSubmit = async (formData) => {
-  const response = await fetch('https://portfolio-contact-api.your-subdomain.workers.dev', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  const response = await fetch(
+    "https://portfolio-contact-api.your-subdomain.workers.dev",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      }),
     },
-    body: JSON.stringify({
-      name: formData.name,
-      email: formData.email,
-      message: formData.message,
-    }),
-  });
+  );
 
   const result = await response.json();
-  
+
   if (result.success) {
-    console.log('Email sent successfully!');
+    console.log("Email sent successfully!");
   } else {
-    console.error('Failed to send email:', result.error);
+    console.error("Failed to send email:", result.error);
   }
 };
 ```
@@ -129,6 +135,7 @@ const handleSubmit = async (formData) => {
 Send a contact form submission.
 
 **Request Body:**
+
 ```json
 {
   "name": "John Doe",
@@ -138,6 +145,7 @@ Send a contact form submission.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -146,6 +154,7 @@ Send a contact form submission.
 ```
 
 **Error Response:**
+
 ```json
 {
   "success": false,
@@ -160,24 +169,32 @@ Send a contact form submission.
 Set these using `wrangler secret put`:
 
 **Email Service API Keys:**
+
 - `MAILTRAP_API_KEY`: Your Mailtrap API token
 - `RESEND_API_KEY`: Your Resend API key
 - `SENDGRID_API_KEY`: Your SendGrid API key
 
 **Email Configuration:**
+
 - `RECIPIENT_EMAIL`: The email address that will receive contact form submissions
 - `RECIPIENT_NAME`: (Optional) The name of the recipient
+- `SENDER_EMAIL`: For providing which mail address should be responsible for sending email
 
 ### Customization
 
 1. **Change recipient email**: Set via Wrangler secrets:
+
    ```bash
    wrangler secret put RECIPIENT_EMAIL
    # Enter your email when prompted
-   
-   wrangler secret put RECIPIENT_NAME  
+
+   wrangler secret put RECIPIENT_NAME
    # Enter your name when prompted (optional)
+
+   wrangler secret put SENDER_EMAIL
+   # Enter your custom domain email address when prompted
    ```
+
 2. **Update sender domain**: Modify the `from` field in `src/worker.js` for your verified domain
 3. **Customize email template**: Edit the HTML template in the worker code
 4. **Add rate limiting**: Implement rate limiting logic if needed
@@ -280,3 +297,4 @@ If you encounter any issues:
 ---
 
 **Built with ❤️ using Cloudflare Workers**
+
