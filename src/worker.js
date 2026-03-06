@@ -58,7 +58,7 @@ export default {
           },
           body: JSON.stringify({
             from: {
-              email: "portfolio@demomailtrap.com", // Use your verified domain or Mailtrap's demo domain
+              email: env.SENDER_EMAIL, // Use your verified domain or Mailtrap's demo domain
               name: "Portfolio Contact Form"
             },
             to: [
@@ -125,7 +125,7 @@ Sent from your portfolio contact form
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            from: "portfolio@yourdomain.com", // Must be from your verified domain
+            from: env.SENDER_EMAIL, // Must be from your verified domain
             to: [recipientEmail],
             reply_to: email,
             subject: `Portfolio Contact - Message from ${name}`,
@@ -151,7 +151,7 @@ Sent from your portfolio contact form
         // This would use Cloudflare's Email Workers feature
         // You need to set up email routing in your Cloudflare dashboard
         await env.EMAIL_SENDER.send({
-          from: "portfolio@yourdomain.com",
+          from: env.SENDER_EMAIL,
           to: recipientEmail,
           subject: `Portfolio Contact - Message from ${name}`,
           content: `
@@ -186,7 +186,7 @@ Sent from your portfolio contact form
                   subject: `Portfolio Contact - Message from ${name}`,
                 },
               ],
-              from: { email: "portfolio@yourdomain.com" }, // Must be verified
+              from: { email: env.SENDER_EMAIL }, // Must be verified
               reply_to: { email: email },
               content: [
                 {
